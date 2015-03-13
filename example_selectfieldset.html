@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>Getting started with JSON Form</title>
+    <link rel="stylesheet" style="text/css" href="deps/opt/bootstrap.css" />
+  </head>
+  <body>
+    <h1>Getting started with JSON Form</h1>
+    <form></form>
+    <div id="res" class="alert"></div>
+    <script type="text/javascript" src="deps/jquery.min.js"></script>
+    <script type="text/javascript" src="deps/opt/jquery.ui.custom.js"></script>
+    <script type="text/javascript" src="deps/underscore.js"></script>
+    <script type="text/javascript" src="deps/opt/jsv.js"></script>
+    <script type="text/javascript" src="lib/jsonform.js"></script>
+    <script type="text/javascript">
+      $('form').jsonForm({
+        isBootstrap2 : true,
+        schema: {
+          name: {
+            type: 'string',
+            title: 'Name',
+            required: true
+          },
+          age: {
+            type: 'number',
+            title: 'Age'
+          },
+          personality: {
+            "type": "string",
+            "title": "Personality",
+            "enum": ["active", "lazy"],
+            "required": true,
+            "default": "active"
+          },
+          hobbies: {
+            type: 'array',
+            "minItems": 1,
+            "items": {
+              "type": "object",
+              "properties": {
+                name: {
+                  "type": "string",
+                  "title": "Hobby",
+                  "default": "Soccer"
+                },
+                since: {
+                  "type": "string",
+                  "title": "Active since",
+                  "default": "2000"
+                }
+              }
+            }
+          }
+        },
+        "form": [
+          "name",
+          "age",
+          {
+            "type": "selectfieldset",
+            "key": "personality",
+            "title": "Personality",
+            "items": [
+              {
+                "type": "fieldset",
+                "htmlClass": "some-html-class",
+                "title": "Your hobbies",
+                "legend": "Enter your hobbies",
+                "items": ["hobbies"]
+              },
+              {type: "fieldset", "legend": "Lazy people don't have hobbies"},
+            ]
+          }
+        ],
+        onSubmit: function (errors, values) {
+          if (errors) {
+            $('#res').html('<p>I beg your pardon?</p>');
+          }
+          else {
+            $('#res').html('<p>Hello ' + values.name + '.' +
+              (values.age ? '<br/>You are ' + values.age + '.' : '') +
+              '</p>');
+          }
+        }
+      });
+    </script>
+  </body>
+</html>
+
